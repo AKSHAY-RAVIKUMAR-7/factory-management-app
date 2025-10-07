@@ -7,6 +7,28 @@ let allData = {
     piecework: {}
 };
 
+// Menu toggle functionality
+function toggleMonthMenu() {
+    const menu = document.getElementById('month-menu');
+    const menuBtn = document.querySelector('.menu-btn');
+    
+    menu.classList.toggle('open');
+    menuBtn.classList.toggle('active');
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('month-menu');
+    const menuBtn = document.querySelector('.menu-btn');
+    
+    if (menu && menuBtn && menu.classList.contains('open')) {
+        if (!menuBtn.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.remove('open');
+            menuBtn.classList.remove('active');
+        }
+    }
+});
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
@@ -75,12 +97,25 @@ function updateMonthFromDropdown() {
 }
 
 function updateMonthDisplay() {
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
     const [year, month] = currentMonth.split('-');
     const monthName = monthNames[parseInt(month) - 1];
-    document.querySelector('header h1').textContent = `🏭 Factory Management - ${monthName} ${year}`;
+    
+    // Update the compact month display in header
+    const displayElement = document.getElementById('current-month-display');
+    if (displayElement) {
+        displayElement.textContent = `${monthName} ${year}`;
+    }
+    
+    // Close the menu after selection
+    const menu = document.getElementById('month-menu');
+    const menuBtn = document.querySelector('.menu-btn');
+    if (menu && menu.classList.contains('open')) {
+        menu.classList.remove('open');
+        menuBtn.classList.remove('active');
+    }
 }
 
 function loadAllData() {

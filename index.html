@@ -26,29 +26,46 @@
 </head>
 <body>
     <header>
-        <h1>🏭 Factory Management System</h1>
-        <div class="header-controls">
-            <div class="month-selector">
-                <label for="current-month">Month:</label>
-                <select id="month-dropdown" onchange="updateMonthFromDropdown()">
-                    <option value="01">January</option>
-                    <option value="02">February</option>
-                    <option value="03">March</option>
-                    <option value="04">April</option>
-                    <option value="05">May</option>
-                    <option value="06">June</option>
-                    <option value="07">July</option>
-                    <option value="08">August</option>
-                    <option value="09">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                </select>
-                <input type="number" id="year-input" min="2020" max="2030" placeholder="Year" onchange="updateMonthFromDropdown()">
-                <button class="months-btn" onclick="showMonthsOverview()">📅 All Months</button>
-                <button class="debug-btn" onclick="debugStorage()">🔍 Debug</button>
+        <div class="header-top">
+            <h1>🏭 Factory Management</h1>
+            <div class="header-actions">
+                <button class="menu-btn" onclick="toggleMonthMenu()">
+                    <span class="current-month-display" id="current-month-display">Oct 2025</span>
+                    <span class="menu-icon">⚙️</span>
+                </button>
             </div>
-            <button class="download-btn" onclick="downloadMonthData()">📱 Download PDF</button>
+        </div>
+        
+        <!-- Collapsible Month Menu -->
+        <div class="month-menu" id="month-menu">
+            <div class="month-menu-content">
+                <div class="month-controls">
+                    <label>Month & Year:</label>
+                    <div class="date-inputs">
+                        <select id="month-dropdown" onchange="updateMonthFromDropdown()">
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" id="year-input" min="2020" max="2030" placeholder="Year" onchange="updateMonthFromDropdown()">
+                    </div>
+                </div>
+                
+                <div class="menu-actions">
+                    <button class="action-btn" onclick="showMonthsOverview()">📅 All Months</button>
+                    <button class="action-btn" onclick="debugStorage()">🔍 Debug</button>
+                    <button class="action-btn primary" onclick="downloadMonthData()">📱 Download PDF</button>
+                </div>
+            </div>
         </div>
     </header>
 
