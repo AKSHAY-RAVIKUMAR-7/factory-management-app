@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Management System</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Complete factory management system for mobile and desktop">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Factory Management">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -285,5 +301,73 @@
     </main>
 
     <script src="script.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                        
+                        // Show install prompt for PWA
+                        let deferredPrompt;
+                        window.addEventListener('beforeinstallprompt', (e) => {
+                            e.preventDefault();
+                            deferredPrompt = e;
+                            
+                            // Show install button or banner
+                            const installBanner = document.createElement('div');
+                            installBanner.innerHTML = `
+                                <div style="position: fixed; top: 0; left: 0; right: 0; background: #667eea; color: white; padding: 1rem; text-align: center; z-index: 1000;">
+                                    <span>📱 Install this app on your phone for better experience!</span>
+                                    <button onclick="installApp()" style="margin-left: 1rem; padding: 0.5rem 1rem; background: white; color: #667eea; border: none; border-radius: 4px; cursor: pointer;">Install</button>
+                                    <button onclick="dismissInstall()" style="margin-left: 0.5rem; background: none; color: white; border: 1px solid white; padding: 0.5rem; border-radius: 4px; cursor: pointer;">×</button>
+                                </div>
+                            `;
+                            document.body.appendChild(installBanner);
+                            
+                            // Global install function
+                            window.installApp = () => {
+                                deferredPrompt.prompt();
+                                deferredPrompt.userChoice.then((choiceResult) => {
+                                    if (choiceResult.outcome === 'accepted') {
+                                        console.log('User accepted the install prompt');
+                                    }
+                                    deferredPrompt = null;
+                                    installBanner.remove();
+                                });
+                            };
+                            
+                            window.dismissInstall = () => {
+                                installBanner.remove();
+                            };
+                        });
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Add to home screen prompt for iOS
+        if (navigator.userAgent.match(/iPhone|iPad|iPod/)) {
+            window.addEventListener('load', () => {
+                if (!window.navigator.standalone) {
+                    setTimeout(() => {
+                        const iosBanner = document.createElement('div');
+                        iosBanner.innerHTML = `
+                            <div style="position: fixed; bottom: 0; left: 0; right: 0; background: #667eea; color: white; padding: 1rem; text-align: center; z-index: 1000;">
+                                <span>📱 To install: Tap Share button, then "Add to Home Screen"</span>
+                                <button onclick="this.parentElement.parentElement.remove()" style="margin-left: 1rem; background: none; color: white; border: 1px solid white; padding: 0.5rem; border-radius: 4px; cursor: pointer;">Got it</button>
+                            </div>
+                        `;
+                        document.body.appendChild(iosBanner);
+                    }, 3000);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
