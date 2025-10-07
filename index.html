@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>🏭 Factory Management System</h1>
+        <div class="header-controls">
+            <div class="month-selector">
+                <label for="current-month">Month:</label>
+                <select id="month-dropdown" onchange="updateMonthFromDropdown()">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <input type="number" id="year-input" min="2020" max="2030" placeholder="Year" onchange="updateMonthFromDropdown()">
+                <button class="months-btn" onclick="showMonthsOverview()">📅 All Months</button>
+                <button class="debug-btn" onclick="debugStorage()">🔍 Debug</button>
+            </div>
+            <button class="download-btn" onclick="downloadMonthData()">📱 Download PDF</button>
+        </div>
+    </header>
+
+    <nav class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('loading')">📦 Loading</button>
+        <button class="tab-btn" onclick="showTab('salary')">💰 Salary</button>
+        <button class="tab-btn" onclick="showTab('received')">📥 Received</button>
+        <button class="tab-btn" onclick="showTab('piecework')">⚙️ Piece Work</button>
+    </nav>
+
+    <main class="container">
+        <!-- Loading Section -->
+        <div id="loading" class="tab-content active">
+            <div class="section-header">
+                <h2>📦 Loading Section</h2>
+                <div class="data-info">
+                    <span id="loading-count">0 entries</span>
+                    <button class="clear-btn" onclick="clearMonthData('loading')">🗑️ Clear Month</button>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Add New Entry</h3>
+                <div class="form-grid">
+                    <input type="text" id="loading-dc" placeholder="DC Number" required>
+                    <input type="text" id="loading-fabric" placeholder="Fabric" required>
+                    <input type="text" id="loading-provider" placeholder="Provider Name" required>
+                    <input type="date" id="loading-date" required>
+                    <input type="number" id="loading-quantity" placeholder="Quantity" step="0.01" required>
+                    <input type="number" id="loading-rate" placeholder="Rate" step="0.01" required>
+                    <input type="number" id="loading-amount" placeholder="Amount" readonly>
+                    <input type="number" id="loading-received" placeholder="Received" step="0.01">
+                </div>
+                <button onclick="addLoadingEntry()" class="add-btn">Add Entry</button>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="loading-table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>DC Number</th>
+                                <th>Fabric</th>
+                                <th>Provider Name</th>
+                                <th>Date</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Received</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="5"><strong>TOTAL</strong></td>
+                                <td id="loading-total-qty"><strong>0</strong></td>
+                                <td></td>
+                                <td id="loading-total-amount"><strong>₹0.00</strong></td>
+                                <td id="loading-total-received"><strong>₹0.00</strong></td>
+                                <td id="loading-total-balance"><strong>₹0.00</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Salary Section -->
+        <div id="salary" class="tab-content">
+            <div class="section-header">
+                <h2>💰 Salary for Employees</h2>
+                <div class="data-info">
+                    <span id="salary-count">0 entries</span>
+                    <button class="clear-btn" onclick="clearMonthData('salary')">🗑️ Clear Month</button>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Add New Salary Entry</h3>
+                <div class="form-grid">
+                    <input type="text" id="salary-name" placeholder="Employee Name" required>
+                    <input type="number" id="salary-advance" placeholder="Advance" step="0.01">
+                    <input type="number" id="salary-others" placeholder="Others" step="0.01">
+                    <input type="number" id="salary-total" placeholder="Total" readonly>
+                    <input type="number" id="salary-grand-total" placeholder="Grand Total" readonly>
+                    <input type="number" id="salary-issued" placeholder="Issued" step="0.01">
+                </div>
+                <button onclick="addSalaryEntry()" class="add-btn">Add Entry</button>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="salary-table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Advance</th>
+                                <th>Others</th>
+                                <th>Total</th>
+                                <th>Grand Total</th>
+                                <th>Issued</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2"><strong>TOTAL</strong></td>
+                                <td id="salary-total-advance"><strong>₹0.00</strong></td>
+                                <td id="salary-total-others"><strong>₹0.00</strong></td>
+                                <td id="salary-total-total"><strong>₹0.00</strong></td>
+                                <td id="salary-total-grand"><strong>₹0.00</strong></td>
+                                <td id="salary-total-issued"><strong>₹0.00</strong></td>
+                                <td id="salary-total-balance"><strong>₹0.00</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Received Section -->
+        <div id="received" class="tab-content">
+            <div class="section-header">
+                <h2>📥 Received Section</h2>
+                <div class="data-info">
+                    <span id="received-count">0 entries</span>
+                    <button class="clear-btn" onclick="clearMonthData('received')">🗑️ Clear Month</button>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Add New Received Entry</h3>
+                <div class="form-grid">
+                    <input type="text" id="received-name" placeholder="Provider Name" required>
+                    <input type="number" id="received-old-balance" placeholder="Old Balance" step="0.01">
+                    <input type="number" id="received-quantity" placeholder="Quantity" step="0.01">
+                    <input type="number" id="received-rate" placeholder="Rate" step="0.01">
+                    <input type="number" id="received-amount" placeholder="Amount" readonly>
+                    <input type="number" id="received-received" placeholder="Received" step="0.01">
+                </div>
+                <button onclick="addReceivedEntry()" class="add-btn">Add Entry</button>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="received-table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Old Balance</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Received</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2"><strong>TOTAL</strong></td>
+                                <td id="received-total-old-balance"><strong>₹0.00</strong></td>
+                                <td id="received-total-quantity"><strong>0</strong></td>
+                                <td></td>
+                                <td id="received-total-amount"><strong>₹0.00</strong></td>
+                                <td id="received-total-received"><strong>₹0.00</strong></td>
+                                <td id="received-total-balance"><strong>₹0.00</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Piece Work Section -->
+        <div id="piecework" class="tab-content">
+            <div class="section-header">
+                <h2>⚙️ Piece Work Section</h2>
+                <div class="data-info">
+                    <span id="piecework-count">0 entries</span>
+                    <button class="clear-btn" onclick="clearMonthData('piecework')">🗑️ Clear Month</button>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Add New Piece Work Entry</h3>
+                <div class="form-grid">
+                    <input type="text" id="piecework-name" placeholder="Worker Name" required>
+                    <select id="piecework-type" required>
+                        <option value="">Select Work Type</option>
+                        <option value="sleeve-ready-1.5">Sleeve Ready (₹1.5)</option>
+                        <option value="kansei-1">Kansei (₹1)</option>
+                        <option value="single-pocket-1.6">Single Pocket Attach (₹1.60)</option>
+                        <option value="double-pocket-3.2">Double Pocket Attach (₹3.20)</option>
+                        <option value="button-patti-0.7">Button Patti (₹0.70)</option>
+                        <option value="button-patti-label-0.3">Button Patti Label (₹0.30)</option>
+                        <option value="flap-ready-2.5">Flap Ready (₹2.50)</option>
+                        <option value="flap-attach-1.3">Flap Attach (₹1.30)</option>
+                        <option value="front-label-1">Front Label (₹1)</option>
+                        <option value="front-back-1.7">Front and Back (₹1.70)</option>
+                        <option value="sleeve-attach-1.5">Sleeve Attach (₹1.50)</option>
+                        <option value="sleeve-label-0.4">Sleeve Label (₹0.40)</option>
+                        <option value="sleeve-armol-1.2">Sleeve Armol (₹1.20)</option>
+                        <option value="feed-up-1.8">Feed Up (₹1.80)</option>
+                        <option value="coller-attach-1.5">Coller Attach (₹1.50)</option>
+                        <option value="coller-finish-1.3">Coller Finish (₹1.30)</option>
+                        <option value="coller-label-0.3">Coller Label (₹0.30)</option>
+                        <option value="cuff-finishing-1.3">Cuff Finishing (₹1.30)</option>
+                        <option value="bottom-1.3">Bottom (₹1.30)</option>
+                        <option value="coller-ready-3.6">Coller Ready (₹3.60)</option>
+                        <option value="cuff-ready-2.3">Cuff Ready (₹2.30)</option>
+                        <option value="shoulder-ready-1.5">Shoulder Ready (₹1.50)</option>
+                    </select>
+                    <input type="number" id="piecework-quantity" placeholder="Quantity" step="1" required>
+                    <input type="number" id="piecework-rate" placeholder="Rate" readonly>
+                    <input type="number" id="piecework-salary" placeholder="Salary" readonly>
+                </div>
+                <button onclick="addPieceWorkEntry()" class="add-btn">Add Entry</button>
+            </div>
+
+            <div class="table-section">
+                <div class="table-wrapper">
+                    <table id="piecework-table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Work Type</th>
+                                <th>Rate</th>
+                                <th>Quantity</th>
+                                <th>Salary</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="5"><strong>TOTAL</strong></td>
+                                <td id="piecework-total-salary"><strong>₹0.00</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
