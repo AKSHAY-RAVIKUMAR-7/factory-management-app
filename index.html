@@ -2,7 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="vi                                              <div class="search-or-add">
+                    <                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>on type="button" onclick="clearForm('loading')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>        <div class="search-or-add">
+                    <                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>on type="button" onclick="clearForm('loading')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>iv class="form-section">
+                <h3>Add New             <div class="form-section">
+                <h3>Add Employee Entry</h3>
+                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>/h3>
+                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('loading')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>iv class="form-section">
+                <h3>Add New             <div class="form-section">
+                <h3>Add Employee Entry</h3>
+                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>/h3>
+                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('loading')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>iv class="form-section">
+                <h3>Add New             <div class="form-section">
+                <h3>Add Employee Entry</h3>
+                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>/h3>
+                <div class="search-or-add">
+                    <button type="button" onclick="clearForm('loading')" class="clear-form-btn">🧹 Clear Form</button>
+                </div>" content="width=device-width, initial-scale=1.0">
     <title>Factory Management System</title>
     
     <!-- PWA Meta Tags -->
@@ -90,7 +122,7 @@
             <div class="form-section">
                 <h3>Add New Entry</h3>
                 <div class="search-or-add">
-                    <input type="text" id="loading-search-dc" placeholder="Search by DC Number to edit (optional)" onkeyup="searchForEdit('loading')">
+
                     <button type="button" onclick="clearForm('loading')" class="clear-form-btn">� Clear Form</button>
                 </div>
                 <div class="form-grid">
@@ -154,7 +186,7 @@
             <div class="form-section">
                 <h3>Add Employee Entry</h3>
                 <div class="search-or-add">
-                    <input type="text" id="salary-search-name" placeholder="Search by Employee Name to edit (optional)" onkeyup="searchForEdit('salary')">
+
                     <button type="button" onclick="clearForm('salary')" class="clear-form-btn">� Clear Form</button>
                 </div>
                 <div class="form-grid">
@@ -212,32 +244,6 @@
                 </div>
             </div>
             
-            <!-- Edit Section -->
-            <div class="edit-section">
-                <h3>✏️ Edit Received Entry</h3>
-                <div class="edit-form">
-                    <div class="edit-search">
-                        <input type="text" id="received-edit-name" placeholder="Enter Provider Name to edit" onkeyup="handleEditSearch('received')">
-                        <button class="search-btn" onclick="searchAndEditEntry('received')">🔍 Find & Edit</button>
-                    </div>
-                    <div id="received-edit-form" class="edit-form-container" style="display: none;">
-                        <div class="form-grid">
-                            <input type="text" id="received-edit-name-display" placeholder="Provider Name" readonly>
-                            <input type="number" id="received-edit-old-balance" placeholder="Old Balance" step="0.01" required>
-                            <input type="number" id="received-edit-quantity" placeholder="Quantity" step="0.01" required>
-                            <input type="number" id="received-edit-rate" placeholder="Rate" step="0.01" required>
-                            <input type="number" id="received-edit-amount" placeholder="Amount" readonly>
-                            <input type="number" id="received-edit-received" placeholder="Received" step="0.01" required>
-                        </div>
-                        <div class="edit-actions">
-                            <button class="update-btn" onclick="updateEntry('received')">✅ Update Entry</button>
-                            <button class="cancel-btn" onclick="cancelEdit('received')">❌ Cancel</button>
-                            <button class="delete-btn" onclick="deleteEntry('received')">🗑️ Delete Entry</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <div class="form-section">
                 <h3>Add New Received Entry</h3>
                 <div class="form-grid">
@@ -290,40 +296,6 @@
                 <div class="data-info">
                     <span id="piecework-count">0 entries</span>
                     <button class="clear-btn" onclick="clearMonthData('piecework')">🗑️ Clear Month</button>
-                </div>
-            </div>
-            
-            <!-- Edit Section -->
-            <div class="edit-section">
-                <h3>✏️ Edit Piece Work Entry</h3>
-                <div class="edit-form">
-                    <div class="edit-search">
-                        <input type="text" id="piecework-edit-name" placeholder="Enter Worker Name to edit" onkeyup="handleEditSearch('piecework')">
-                        <button class="search-btn" onclick="searchAndEditEntry('piecework')">🔍 Find & Edit</button>
-                    </div>
-                    <div id="piecework-edit-form" class="edit-form-container" style="display: none;">
-                        <div class="form-grid">
-                            <input type="text" id="piecework-edit-name-display" placeholder="Worker Name" readonly>
-                            <select id="piecework-edit-type" required>
-                                <option value="">Select Work Type</option>
-                                <option value="sleeve-ready-1.5">Sleeve Ready (₹1.5)</option>
-                                <option value="kansei-1">Kansei (₹1)</option>
-                                <option value="single-pocket-1.6">Single Pocket Attach (₹1.60)</option>
-                                <option value="double-pocket-3.2">Double Pocket Attach (₹3.20)</option>
-                                <option value="button-patti-0.7">Button Patti (₹0.70)</option>
-                                <option value="button-patti-label-0.3">Button Patti Label (₹0.30)</option>
-                                <option value="flap-ready-2.5">Flap Ready (₹2.50)</option>
-                            </select>
-                            <input type="number" id="piecework-edit-rate" placeholder="Rate" step="0.01" readonly>
-                            <input type="number" id="piecework-edit-quantity" placeholder="Quantity" required>
-                            <input type="number" id="piecework-edit-salary" placeholder="Salary" readonly>
-                        </div>
-                        <div class="edit-actions">
-                            <button class="update-btn" onclick="updateEntry('piecework')">✅ Update Entry</button>
-                            <button class="cancel-btn" onclick="cancelEdit('piecework')">❌ Cancel</button>
-                            <button class="delete-btn" onclick="deleteEntry('piecework')">🗑️ Delete Entry</button>
-                        </div>
-                    </div>
                 </div>
             </div>
             
