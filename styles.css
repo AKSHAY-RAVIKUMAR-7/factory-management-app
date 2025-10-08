@@ -1,7 +1,25 @@
+/* Mobile-first CSS reset and force */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/* Force proper mobile display */
+.header-top {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.menu-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+}
+
+.month-menu {
+    display: block !important;
 }
 
 body {
@@ -243,156 +261,44 @@ header h1 {
     }
 }
 
-.month-selector {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: stretch;
-}
-
-.month-selector label {
-    font-weight: 500;
-    font-size: 0.85rem;
-    text-align: center;
-}
-
-.month-controls {
-    display: flex;
-    gap: 0.3rem;
-}
-
-.month-selector select, .month-selector input[type="number"] {
-    padding: 0.7rem 0.5rem;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    font-size: 0.85rem;
-    flex: 1;
-}
-
-.month-selector select {
-    min-width: 0;
-}
-
-.month-selector input[type="number"] {
-    max-width: 70px;
-}
-
-.month-selector select:focus, .month-selector input[type="number"]:focus {
-    outline: none;
-    border-color: rgba(255,255,255,0.6);
-    background: rgba(255,255,255,0.2);
-}
-
-.month-selector select option {
-    background: #333;
-    color: white;
-    padding: 0.5rem;
-}
-
-.month-buttons {
-    display: flex;
-    gap: 0.3rem;
-    flex-wrap: wrap;
-}
-
-.months-btn, .debug-btn {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border: 2px solid rgba(255,255,255,0.25);
-    padding: 0.6rem 0.8rem;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    flex: 1;
-    text-align: center;
-    min-width: 0;
-}
-
-.months-btn:hover, .debug-btn:hover {
-    background: rgba(255,255,255,0.25);
-    border-color: rgba(255,255,255,0.4);
-    transform: translateY(-1px);
-}
-
-.debug-btn {
-    background: rgba(255,165,0,0.2);
-    border-color: rgba(255,165,0,0.4);
-}
-
-.debug-btn:hover {
-    background: rgba(255,165,0,0.3);
-    border-color: rgba(255,165,0,0.6);
-}
-
-.download-btn {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: 2px solid rgba(255,255,255,0.3);
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    width: 100%;
-    text-align: center;
-}
-
-.download-btn:hover {
-    background: rgba(255,255,255,0.3);
-    border-color: rgba(255,255,255,0.5);
-    transform: translateY(-1px);
-}
-
-/* Desktop month selector */
-@media (min-width: 769px) {
-    .month-selector {
-        flex-direction: row;
-        align-items: center;
-        gap: 1rem;
-    }
-    
-    .month-selector label {
-        text-align: left;
-        min-width: auto;
-    }
-    
-    .month-controls {
-        gap: 0.5rem;
-    }
-    
-    .month-selector select {
-        min-width: 140px;
-        flex: none;
-    }
-    
-    .month-selector input[type="number"] {
-        max-width: 90px;
-        flex: none;
-    }
-    
-    .month-buttons {
-        gap: 0.5rem;
-    }
-    
-    .months-btn, .debug-btn {
-        flex: none;
-        min-width: auto;
-        font-size: 0.8rem;
-        padding: 0.6rem 1rem;
-    }
-    
+/* Force mobile styles - override any conflicting styles */
+@media (max-width: 768px) {
+    /* Hide any old month selector elements */
+    .month-selector,
+    .header-controls,
+    .months-btn,
+    .debug-btn,
     .download-btn {
-        width: auto;
-        font-size: 0.9rem;
+        display: none !important;
+    }
+    
+    /* Ensure new mobile menu is visible */
+    .header-top,
+    .menu-btn,
+    .month-menu {
+        display: flex !important;
+    }
+    
+    /* Override header layout for mobile */
+    header {
+        padding: 0.8rem !important;
+        margin: 0.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .header-top {
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    
+    header h1 {
+        font-size: 1rem !important;
+        margin: 0 !important;
+        text-align: left !important;
     }
 }
+
+/* Remove old month selector styles - replaced by mobile menu */
 
 .tab-nav {
     display: flex;
