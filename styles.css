@@ -402,7 +402,46 @@ header h1 {
     margin: 0;
 }
 
-/* Search and Add Form Styles */
+/* Mobile optimization for forms */
+@media (max-width: 768px) {
+    /* Form section improvements */
+    .form-section {
+        background: #f8f9ff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 0.5rem 0.3rem 1.5rem 0.3rem;
+    }
+    
+    /* Better spacing for form elements */
+    .form-grid input[type="text"],
+    .form-grid input[type="number"],
+    .form-grid input[type="date"],
+    .form-grid select {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: white;
+        border: 2px solid #e1e8ff;
+        border-radius: 8px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        line-height: 1.5;
+        transition: border-color 0.3s ease;
+    }
+    
+    .form-grid input:focus,
+    .form-grid select:focus {
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Improve search section */
+    .search-or-add {
+        background: rgba(255,255,255,0.8);
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: 1px solid #e1e8ff;
+    }
+}
 .search-or-add {
     display: flex;
     gap: 0.5rem;
@@ -1000,13 +1039,45 @@ tbody tr:nth-child(even):hover {
     
     .form-section {
         padding: 1rem;
+        margin: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .search-or-add {
+        flex-direction: column;
+        gap: 0.5rem;
         margin-bottom: 1rem;
+    }
+    
+    .search-or-add input {
+        width: 100%;
+        min-width: auto;
+        padding: 0.8rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+    
+    .clear-form-btn {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+    
+    .form-grid input,
+    .form-grid select {
+        padding: 0.8rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 2px solid #e1e8ff;
     }
     
     .add-btn {
         width: 100%;
-        padding: 1rem;
-        font-size: 1rem;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+        border-radius: 8px;
     }
     
     table {
@@ -1047,7 +1118,61 @@ tbody tr:nth-child(even):hover {
         padding: 0.6rem 0.3rem;
     }
     
+    .form-section {
+        padding: 0.8rem;
+        margin: 0.3rem;
+        margin-bottom: 1rem;
+    }
+    
     .form-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .search-or-add input {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .clear-form-btn {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .form-grid {
+        gap: 1rem;
+    }
+    
+    .form-grid input,
+    .form-grid select {
+        padding: 1rem;
+        font-size: 1.1rem;
+        min-height: 48px; /* Touch-friendly height */
+    }
+    
+    .add-btn {
+        padding: 1.3rem;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        min-height: 56px; /* Touch-friendly height */
+    }
+    
+    .action-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        min-height: 40px;
+        min-width: 40px;
+    }
+    
+    /* Ensure table doesn't take too much space */
+    .table-section {
+        margin-bottom: 2rem;
+    }
+    
+    /* Add more space at bottom for mobile */
+    .tab-content {
+        padding-bottom: 3rem;
+    }
         font-size: 1rem;
     }
     
