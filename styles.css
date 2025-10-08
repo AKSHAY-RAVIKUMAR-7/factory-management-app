@@ -54,7 +54,38 @@ body {
     }
 }
 
-/* Mobile-first header with compact menu design */
+/* Form Actions Layout */
+.form-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.form-actions .add-btn {
+    flex: 2;
+    min-width: 150px;
+}
+
+.form-actions .clear-form-btn {
+    flex: 1;
+    min-width: 100px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.form-actions .clear-form-btn:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Search and Add Form Styles */
 header {
     background: rgba(255,255,255,0.15);
     backdrop-filter: blur(20px);
@@ -1070,6 +1101,19 @@ tbody tr:nth-child(even):hover {
         font-size: 1rem;
         border-radius: 8px;
         border: 2px solid #e1e8ff;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .form-actions .add-btn,
+    .form-actions .clear-form-btn {
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
     }
     
     .add-btn {

@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="vie                <h3>Add New Entry</h3>
+                <div class="f                <h3>Add Employee Entry</h3>
+                <div class="form-grid">
+                    <input type="text" id="salary-name" placeholder="Employee Name" required onkeyup="autoFillForm('salary')" onblur="autoFillForm('salary')">d">
+                    <input type="text" id="loading-dc" placeholder="DC Number" required onkeyup="autoFillForm('loading')" onblur="autoFillForm('loading')">content="width=device-width, initial-scale=1.0">
     <title>Factory Management System</title>
     
     <!-- PWA Meta Tags -->
@@ -103,7 +107,10 @@
                     <input type="number" id="loading-amount" placeholder="Amount" readonly>
                     <input type="number" id="loading-received" placeholder="Received" step="0.01">
                 </div>
-                <button onclick="addOrUpdateLoadingEntry()" class="add-btn" id="loading-submit-btn">Add Entry</button>
+                <div class="form-actions">
+                    <button onclick="addOrUpdateLoadingEntry()" class="add-btn" id="loading-submit-btn">Add Entry</button>
+                    <button type="button" onclick="clearForm('loading')" class="clear-form-btn">🔄 Clear Form</button>
+                </div>
             </div>
 
             <div class="table-section">
@@ -165,7 +172,10 @@
                     <input type="number" id="salary-grand-total" placeholder="Grand Total" readonly>
                     <input type="number" id="salary-issued" placeholder="Issued" step="0.01">
                 </div>
-                <button onclick="addOrUpdateSalaryEntry()" class="add-btn" id="salary-submit-btn">Add Entry</button>
+                <div class="form-actions">
+                    <button onclick="addOrUpdateSalaryEntry()" class="add-btn" id="salary-submit-btn">Add Entry</button>
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">🔄 Clear Form</button>
+                </div>
             </div>
 
             <div class="table-section">

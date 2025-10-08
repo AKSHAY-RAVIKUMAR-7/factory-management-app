@@ -42,28 +42,52 @@ document.addEventListener('click', function(event) {
 let currentEditIndex = -1;
 let currentEditSection = '';
 
-// Search for edit functionality
-function searchForEdit(section) {
-    const searchInput = document.getElementById(`${section}-search-${getSearchField(section)}`);
-    const searchValue = searchInput.value.trim().toLowerCase();
+// Auto-fill form functionality based on DC number or name
+function autoFillForm(section) {
+    const searchKey = getSearchField(section);
+    const inputField = document.getElementById(section === 'loading' ? 'loading-dc' : `${section}-name`);
+    const searchValue = inputField.value.trim().toLowerCase();
     
     if (searchValue.length < 2) {
-        clearForm(section);
+        // If input is too short, ensure we're in add mode
+        setFormToAddMode(section);
         return;
     }
     
     const entries = allData[section][currentMonth] || [];
-    const searchField = getSearchField(section) === 'dcNumber' ? 'dcNumber' : 'name';
+    const fieldToSearch = searchKey === 'dcNumber' ? 'dcNumber' : 'name';
     
     const foundIndex = entries.findIndex(entry => {
-        const fieldValue = entry[searchField] || '';
-        return fieldValue.toLowerCase().includes(searchValue);
+        const fieldValue = entry[fieldToSearch] || '';
+        return fieldValue.toLowerCase() === searchValue;
     });
     
     if (foundIndex !== -1) {
         populateFormForEdit(section, entries[foundIndex], foundIndex);
     } else {
-        clearForm(section);
+        // If exact match not found, check for partial match
+        const partialIndex = entries.findIndex(entry => {
+            const fieldValue = entry[fieldToSearch] || '';
+            return fieldValue.toLowerCase().includes(searchValue);
+        });
+        
+        if (partialIndex !== -1) {
+            populateFormForEdit(section, entries[partialIndex], partialIndex);
+        } else {
+            setFormToAddMode(section);
+        }
+    }
+}
+
+// Set form to add mode
+function setFormToAddMode(section) {
+    if (currentEditSection === section) {
+        currentEditSection = '';
+        currentEditIndex = -1;
+        
+        const submitBtn = document.getElementById(`${section}-submit-btn`);
+        submitBtn.textContent = 'Add Entry';
+        submitBtn.style.background = '#667eea';
     }
 }
 
@@ -135,10 +159,6 @@ function clearForm(section) {
     const submitBtn = document.getElementById(`${section}-submit-btn`);
     submitBtn.textContent = 'Add Entry';
     submitBtn.style.background = '#667eea';
-    
-    // Clear search field
-    const searchInput = document.getElementById(`${section}-search-${getSearchField(section)}`);
-    if (searchInput) searchInput.value = '';
     
     // Clear form fields
     switch(section) {
