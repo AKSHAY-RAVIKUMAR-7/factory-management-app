@@ -87,36 +87,12 @@
                 </div>
             </div>
             
-            <!-- Edit Section -->
-            <div class="edit-section">
-                <h3>✏️ Edit Entry</h3>
-                <div class="edit-form">
-                    <div class="edit-search">
-                        <input type="text" id="loading-edit-dcNumber" placeholder="Enter DC Number to edit" onkeyup="handleEditSearch('loading')">
-                        <button class="search-btn" onclick="searchAndEditEntry('loading')">🔍 Find & Edit</button>
-                    </div>
-                    <div id="loading-edit-form" class="edit-form-container" style="display: none;">
-                        <div class="form-grid">
-                            <input type="text" id="loading-edit-dc-display" placeholder="DC Number" readonly>
-                            <input type="text" id="loading-edit-fabric" placeholder="Fabric" required>
-                            <input type="text" id="loading-edit-provider" placeholder="Provider Name" required>
-                            <input type="date" id="loading-edit-date" required>
-                            <input type="number" id="loading-edit-quantity" placeholder="Quantity" step="0.01" required>
-                            <input type="number" id="loading-edit-rate" placeholder="Rate" step="0.01" required>
-                            <input type="number" id="loading-edit-amount" placeholder="Amount" readonly>
-                            <input type="number" id="loading-edit-received" placeholder="Received" step="0.01">
-                        </div>
-                        <div class="edit-actions">
-                            <button class="update-btn" onclick="updateEntry('loading')">✅ Update Entry</button>
-                            <button class="cancel-btn" onclick="cancelEdit('loading')">❌ Cancel</button>
-                            <button class="delete-btn" onclick="deleteEntry('loading')">🗑️ Delete Entry</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <div class="form-section">
                 <h3>Add New Entry</h3>
+                <div class="search-or-add">
+                    <input type="text" id="loading-search-dc" placeholder="Search by DC Number to edit (optional)" onkeyup="searchForEdit('loading')">
+                    <button type="button" onclick="clearForm('loading')" class="clear-form-btn">� Clear Form</button>
+                </div>
                 <div class="form-grid">
                     <input type="text" id="loading-dc" placeholder="DC Number" required>
                     <input type="text" id="loading-fabric" placeholder="Fabric" required>
@@ -127,7 +103,7 @@
                     <input type="number" id="loading-amount" placeholder="Amount" readonly>
                     <input type="number" id="loading-received" placeholder="Received" step="0.01">
                 </div>
-                <button onclick="addLoadingEntry()" class="add-btn">Add Entry</button>
+                <button onclick="addOrUpdateLoadingEntry()" class="add-btn" id="loading-submit-btn">Add Entry</button>
             </div>
 
             <div class="table-section">
@@ -145,6 +121,7 @@
                                 <th>Amount</th>
                                 <th>Received</th>
                                 <th>Balance</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -156,6 +133,7 @@
                                 <td id="loading-total-amount"><strong>₹0.00</strong></td>
                                 <td id="loading-total-received"><strong>₹0.00</strong></td>
                                 <td id="loading-total-balance"><strong>₹0.00</strong></td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -173,34 +151,12 @@
                 </div>
             </div>
             
-            <!-- Edit Section -->
-            <div class="edit-section">
-                <h3>✏️ Edit Employee Entry</h3>
-                <div class="edit-form">
-                    <div class="edit-search">
-                        <input type="text" id="salary-edit-name" placeholder="Enter Employee Name to edit" onkeyup="handleEditSearch('salary')">
-                        <button class="search-btn" onclick="searchAndEditEntry('salary')">🔍 Find & Edit</button>
-                    </div>
-                    <div id="salary-edit-form" class="edit-form-container" style="display: none;">
-                        <div class="form-grid">
-                            <input type="text" id="salary-edit-name-display" placeholder="Employee Name" readonly>
-                            <input type="number" id="salary-edit-advance" placeholder="Advance" step="0.01" required>
-                            <input type="number" id="salary-edit-others" placeholder="Others" step="0.01" required>
-                            <input type="number" id="salary-edit-total" placeholder="Total" readonly>
-                            <input type="number" id="salary-edit-grand-total" placeholder="Grand Total" readonly>
-                            <input type="number" id="salary-edit-issued" placeholder="Issued" step="0.01" required>
-                        </div>
-                        <div class="edit-actions">
-                            <button class="update-btn" onclick="updateEntry('salary')">✅ Update Entry</button>
-                            <button class="cancel-btn" onclick="cancelEdit('salary')">❌ Cancel</button>
-                            <button class="delete-btn" onclick="deleteEntry('salary')">🗑️ Delete Entry</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <div class="form-section">
-                <h3>Add New Salary Entry</h3>
+                <h3>Add Employee Entry</h3>
+                <div class="search-or-add">
+                    <input type="text" id="salary-search-name" placeholder="Search by Employee Name to edit (optional)" onkeyup="searchForEdit('salary')">
+                    <button type="button" onclick="clearForm('salary')" class="clear-form-btn">� Clear Form</button>
+                </div>
                 <div class="form-grid">
                     <input type="text" id="salary-name" placeholder="Employee Name" required>
                     <input type="number" id="salary-advance" placeholder="Advance" step="0.01">
@@ -209,7 +165,7 @@
                     <input type="number" id="salary-grand-total" placeholder="Grand Total" readonly>
                     <input type="number" id="salary-issued" placeholder="Issued" step="0.01">
                 </div>
-                <button onclick="addSalaryEntry()" class="add-btn">Add Entry</button>
+                <button onclick="addOrUpdateSalaryEntry()" class="add-btn" id="salary-submit-btn">Add Entry</button>
             </div>
 
             <div class="table-section">
@@ -225,6 +181,7 @@
                                 <th>Grand Total</th>
                                 <th>Issued</th>
                                 <th>Balance</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -237,6 +194,7 @@
                                 <td id="salary-total-grand"><strong>₹0.00</strong></td>
                                 <td id="salary-total-issued"><strong>₹0.00</strong></td>
                                 <td id="salary-total-balance"><strong>₹0.00</strong></td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>

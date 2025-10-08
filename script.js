@@ -39,53 +39,36 @@ document.addEventListener('click', function(event) {
 });
 
 // Edit functionality variables
-let currentEditSection = '';
 let currentEditIndex = -1;
+let currentEditSection = '';
 
-// Search and edit entry
-function searchAndEditEntry(section) {
-    const searchKey = getSearchKey(section);
-    const searchValue = document.getElementById(`${section}-edit-${searchKey}`).value.trim();
+// Search for edit functionality
+function searchForEdit(section) {
+    const searchInput = document.getElementById(`${section}-search-${getSearchField(section)}`);
+    const searchValue = searchInput.value.trim().toLowerCase();
     
-    if (!searchValue) {
-        alert(`Please enter a ${getSearchLabel(section)} to search for.`);
+    if (searchValue.length < 2) {
+        clearForm(section);
         return;
     }
     
     const entries = allData[section][currentMonth] || [];
+    const searchField = getSearchField(section) === 'dcNumber' ? 'dcNumber' : 'name';
+    
     const foundIndex = entries.findIndex(entry => {
-        return entry[searchKey].toLowerCase().includes(searchValue.toLowerCase());
+        const fieldValue = entry[searchField] || '';
+        return fieldValue.toLowerCase().includes(searchValue);
     });
     
-    if (foundIndex === -1) {
-        alert(`No entry found with ${getSearchLabel(section)}: "${searchValue}"`);
-        return;
-    }
-    
-    // Show edit form and populate with found entry
-    currentEditSection = section;
-    currentEditIndex = foundIndex;
-    showEditForm(section, entries[foundIndex]);
-}
-
-// Handle real-time search suggestions
-function handleEditSearch(section) {
-    const searchKey = getSearchKey(section);
-    const searchValue = document.getElementById(`${section}-edit-${searchKey}`).value.trim();
-    
-    if (searchValue.length >= 2) {
-        const entries = allData[section][currentMonth] || [];
-        const matches = entries.filter(entry => 
-            entry[searchKey].toLowerCase().includes(searchValue.toLowerCase())
-        );
-        
-        // You could add a dropdown here showing matches if desired
-        console.log(`Found ${matches.length} matches for "${searchValue}"`);
+    if (foundIndex !== -1) {
+        populateFormForEdit(section, entries[foundIndex], foundIndex);
+    } else {
+        clearForm(section);
     }
 }
 
-// Get search key based on section
-function getSearchKey(section) {
+// Get search field based on section
+function getSearchField(section) {
     switch(section) {
         case 'loading': return 'dcNumber';
         case 'salary': return 'name';
@@ -95,270 +78,206 @@ function getSearchKey(section) {
     }
 }
 
-// Get search label based on section
-function getSearchLabel(section) {
-    switch(section) {
-        case 'loading': return 'DC Number';
-        case 'salary': return 'Employee Name';
-        case 'received': return 'Provider Name';
-        case 'piecework': return 'Worker Name';
-        default: return 'Name';
-    }
-}
-
-// Show edit form with populated data
-function showEditForm(section, entry) {
-    const formContainer = document.getElementById(`${section}-edit-form`);
-    formContainer.style.display = 'block';
+// Populate form for editing
+function populateFormForEdit(section, entry, index) {
+    currentEditSection = section;
+    currentEditIndex = index;
     
-    // Populate form fields based on section
+    const submitBtn = document.getElementById(`${section}-submit-btn`);
+    submitBtn.textContent = 'Update Entry';
+    submitBtn.style.background = '#4ecdc4';
+    
     switch(section) {
         case 'loading':
-            document.getElementById('loading-edit-dc-display').value = entry.dcNumber;
-            document.getElementById('loading-edit-fabric').value = entry.fabric;
-            document.getElementById('loading-edit-provider').value = entry.provider;
-            document.getElementById('loading-edit-date').value = entry.date;
-            document.getElementById('loading-edit-quantity').value = entry.quantity;
-            document.getElementById('loading-edit-rate').value = entry.rate;
-            document.getElementById('loading-edit-amount').value = entry.amount;
-            document.getElementById('loading-edit-received').value = entry.received || 0;
+            document.getElementById('loading-dc').value = entry.dcNumber;
+            document.getElementById('loading-fabric').value = entry.fabric;
+            document.getElementById('loading-provider').value = entry.provider;
+            document.getElementById('loading-date').value = entry.date;
+            document.getElementById('loading-quantity').value = entry.quantity;
+            document.getElementById('loading-rate').value = entry.rate;
+            document.getElementById('loading-amount').value = entry.amount;
+            document.getElementById('loading-received').value = entry.received || 0;
             break;
             
         case 'salary':
-            document.getElementById('salary-edit-name-display').value = entry.name;
-            document.getElementById('salary-edit-advance').value = entry.advance;
-            document.getElementById('salary-edit-others').value = entry.others;
-            document.getElementById('salary-edit-total').value = entry.total;
-            document.getElementById('salary-edit-grand-total').value = entry.grandTotal;
-            document.getElementById('salary-edit-issued').value = entry.issued || 0;
+            document.getElementById('salary-name').value = entry.name;
+            document.getElementById('salary-advance').value = entry.advance;
+            document.getElementById('salary-others').value = entry.others;
+            document.getElementById('salary-total').value = entry.total;
+            document.getElementById('salary-grand-total').value = entry.grandTotal;
+            document.getElementById('salary-issued').value = entry.issued || 0;
             break;
             
         case 'received':
-            document.getElementById('received-edit-name-display').value = entry.name;
-            document.getElementById('received-edit-old-balance').value = entry.oldBalance;
-            document.getElementById('received-edit-quantity').value = entry.quantity;
-            document.getElementById('received-edit-rate').value = entry.rate;
-            document.getElementById('received-edit-amount').value = entry.amount;
-            document.getElementById('received-edit-received').value = entry.received || 0;
+            document.getElementById('received-name').value = entry.name;
+            document.getElementById('received-old-balance').value = entry.oldBalance;
+            document.getElementById('received-quantity').value = entry.quantity;
+            document.getElementById('received-rate').value = entry.rate;
+            document.getElementById('received-amount').value = entry.amount;
+            document.getElementById('received-received').value = entry.received || 0;
             break;
             
         case 'piecework':
-            document.getElementById('piecework-edit-name-display').value = entry.name;
-            document.getElementById('piecework-edit-type').value = entry.workType;
-            document.getElementById('piecework-edit-rate').value = entry.rate;
-            document.getElementById('piecework-edit-quantity').value = entry.quantity;
-            document.getElementById('piecework-edit-salary').value = entry.salary;
+            document.getElementById('piecework-name').value = entry.name;
+            document.getElementById('piecework-type').value = entry.workType;
+            document.getElementById('piecework-rate').value = entry.rate;
+            document.getElementById('piecework-quantity').value = entry.quantity;
+            document.getElementById('piecework-salary').value = entry.salary;
             break;
     }
-    
-    // Setup event listeners for auto-calculation
-    setupEditCalculations(section);
 }
 
-// Setup auto-calculations for edit forms
-function setupEditCalculations(section) {
+// Clear form and reset to add mode
+function clearForm(section) {
+    currentEditSection = '';
+    currentEditIndex = -1;
+    
+    const submitBtn = document.getElementById(`${section}-submit-btn`);
+    submitBtn.textContent = 'Add Entry';
+    submitBtn.style.background = '#667eea';
+    
+    // Clear search field
+    const searchInput = document.getElementById(`${section}-search-${getSearchField(section)}`);
+    if (searchInput) searchInput.value = '';
+    
+    // Clear form fields
     switch(section) {
         case 'loading':
-            const qtyInput = document.getElementById('loading-edit-quantity');
-            const rateInput = document.getElementById('loading-edit-rate');
-            const amountInput = document.getElementById('loading-edit-amount');
-            
-            function updateLoadingAmount() {
-                const qty = parseFloat(qtyInput.value) || 0;
-                const rate = parseFloat(rateInput.value) || 0;
-                amountInput.value = (qty * rate).toFixed(2);
-            }
-            
-            qtyInput.addEventListener('input', updateLoadingAmount);
-            rateInput.addEventListener('input', updateLoadingAmount);
+            document.getElementById('loading-dc').value = '';
+            document.getElementById('loading-fabric').value = '';
+            document.getElementById('loading-provider').value = '';
+            document.getElementById('loading-date').value = '';
+            document.getElementById('loading-quantity').value = '';
+            document.getElementById('loading-rate').value = '';
+            document.getElementById('loading-amount').value = '';
+            document.getElementById('loading-received').value = '';
             break;
             
         case 'salary':
-            const advanceInput = document.getElementById('salary-edit-advance');
-            const othersInput = document.getElementById('salary-edit-others');
-            const totalInput = document.getElementById('salary-edit-total');
-            const grandTotalInput = document.getElementById('salary-edit-grand-total');
-            
-            function updateSalaryTotals() {
-                const advance = parseFloat(advanceInput.value) || 0;
-                const others = parseFloat(othersInput.value) || 0;
-                const total = advance + others;
-                totalInput.value = total.toFixed(2);
-                grandTotalInput.value = total.toFixed(2);
-            }
-            
-            advanceInput.addEventListener('input', updateSalaryTotals);
-            othersInput.addEventListener('input', updateSalaryTotals);
+            document.getElementById('salary-name').value = '';
+            document.getElementById('salary-advance').value = '';
+            document.getElementById('salary-others').value = '';
+            document.getElementById('salary-total').value = '';
+            document.getElementById('salary-grand-total').value = '';
+            document.getElementById('salary-issued').value = '';
             break;
             
         case 'received':
-            const recQtyInput = document.getElementById('received-edit-quantity');
-            const recRateInput = document.getElementById('received-edit-rate');
-            const recAmountInput = document.getElementById('received-edit-amount');
-            
-            function updateReceivedAmount() {
-                const qty = parseFloat(recQtyInput.value) || 0;
-                const rate = parseFloat(recRateInput.value) || 0;
-                recAmountInput.value = (qty * rate).toFixed(2);
-            }
-            
-            recQtyInput.addEventListener('input', updateReceivedAmount);
-            recRateInput.addEventListener('input', updateReceivedAmount);
+            document.getElementById('received-name').value = '';
+            document.getElementById('received-old-balance').value = '';
+            document.getElementById('received-quantity').value = '';
+            document.getElementById('received-rate').value = '';
+            document.getElementById('received-amount').value = '';
+            document.getElementById('received-received').value = '';
             break;
             
         case 'piecework':
-            const typeSelect = document.getElementById('piecework-edit-type');
-            const pwRateInput = document.getElementById('piecework-edit-rate');
-            const pwQtyInput = document.getElementById('piecework-edit-quantity');
-            const pwSalaryInput = document.getElementById('piecework-edit-salary');
-            
-            function updatePieceWorkRate() {
-                const workType = typeSelect.value;
-                if (workType) {
-                    const rate = parseFloat(workType.split('-').pop());
-                    pwRateInput.value = rate.toFixed(2);
-                    updatePieceWorkSalary();
-                }
-            }
-            
-            function updatePieceWorkSalary() {
-                const rate = parseFloat(pwRateInput.value) || 0;
-                const qty = parseFloat(pwQtyInput.value) || 0;
-                pwSalaryInput.value = (rate * qty).toFixed(2);
-            }
-            
-            typeSelect.addEventListener('change', updatePieceWorkRate);
-            pwQtyInput.addEventListener('input', updatePieceWorkSalary);
+            document.getElementById('piecework-name').value = '';
+            document.getElementById('piecework-type').value = '';
+            document.getElementById('piecework-rate').value = '';
+            document.getElementById('piecework-quantity').value = '';
+            document.getElementById('piecework-salary').value = '';
             break;
     }
 }
 
-// Update entry
-function updateEntry(section) {
-    if (currentEditIndex === -1) {
-        alert('No entry selected for editing.');
+// Add or Update Loading Entry
+function addOrUpdateLoadingEntry() {
+    if (currentEditSection === 'loading' && currentEditIndex !== -1) {
+        updateLoadingEntry();
+    } else {
+        addLoadingEntry();
+    }
+}
+
+// Add or Update Salary Entry  
+function addOrUpdateSalaryEntry() {
+    if (currentEditSection === 'salary' && currentEditIndex !== -1) {
+        updateSalaryEntry();
+    } else {
+        addSalaryEntry();
+    }
+}
+
+// Update Loading Entry
+function updateLoadingEntry() {
+    const dcNumber = document.getElementById('loading-dc').value;
+    const fabric = document.getElementById('loading-fabric').value;
+    const provider = document.getElementById('loading-provider').value;
+    const date = document.getElementById('loading-date').value;
+    const quantity = parseFloat(document.getElementById('loading-quantity').value);
+    const rate = parseFloat(document.getElementById('loading-rate').value);
+    const amount = quantity * rate;
+    const received = parseFloat(document.getElementById('loading-received').value) || 0;
+    const balance = amount - received;
+
+    if (!dcNumber || !fabric || !provider || !date || !quantity || !rate) {
+        alert('Please fill all required fields');
         return;
     }
-    
-    // Get updated data based on section
-    let updatedEntry;
-    switch(section) {
-        case 'loading':
-            updatedEntry = {
-                dcNumber: document.getElementById('loading-edit-dc-display').value,
-                fabric: document.getElementById('loading-edit-fabric').value,
-                provider: document.getElementById('loading-edit-provider').value,
-                date: document.getElementById('loading-edit-date').value,
-                quantity: parseFloat(document.getElementById('loading-edit-quantity').value),
-                rate: parseFloat(document.getElementById('loading-edit-rate').value),
-                amount: parseFloat(document.getElementById('loading-edit-amount').value),
-                received: parseFloat(document.getElementById('loading-edit-received').value) || 0
-            };
-            updatedEntry.balance = updatedEntry.amount - updatedEntry.received;
-            break;
-            
-        case 'salary':
-            const advance = parseFloat(document.getElementById('salary-edit-advance').value) || 0;
-            const others = parseFloat(document.getElementById('salary-edit-others').value) || 0;
-            const total = advance + others;
-            const issued = parseFloat(document.getElementById('salary-edit-issued').value) || 0;
-            
-            updatedEntry = {
-                name: document.getElementById('salary-edit-name-display').value,
-                advance: advance,
-                others: others,
-                total: total,
-                grandTotal: total,
-                issued: issued,
-                balance: total - issued
-            };
-            break;
-            
-        case 'received':
-            const oldBalance = parseFloat(document.getElementById('received-edit-old-balance').value) || 0;
-            const quantity = parseFloat(document.getElementById('received-edit-quantity').value) || 0;
-            const rate = parseFloat(document.getElementById('received-edit-rate').value) || 0;
-            const amount = quantity * rate;
-            const received = parseFloat(document.getElementById('received-edit-received').value) || 0;
-            
-            updatedEntry = {
-                name: document.getElementById('received-edit-name-display').value,
-                oldBalance: oldBalance,
-                quantity: quantity,
-                rate: rate,
-                amount: amount,
-                received: received,
-                balance: (oldBalance + amount) - received
-            };
-            break;
-            
-        case 'piecework':
-            const workType = document.getElementById('piecework-edit-type').value;
-            const workTypeLabel = document.getElementById('piecework-edit-type').selectedOptions[0].text;
-            const pwRate = parseFloat(document.getElementById('piecework-edit-rate').value) || 0;
-            const pwQuantity = parseFloat(document.getElementById('piecework-edit-quantity').value) || 0;
-            
-            updatedEntry = {
-                name: document.getElementById('piecework-edit-name-display').value,
-                workType: workType,
-                workTypeLabel: workTypeLabel,
-                rate: pwRate,
-                quantity: pwQuantity,
-                salary: pwRate * pwQuantity
-            };
-            break;
-    }
-    
-    // Update the entry in data
-    if (!allData[section][currentMonth]) {
-        allData[section][currentMonth] = [];
-    }
-    allData[section][currentMonth][currentEditIndex] = updatedEntry;
-    
-    // Save and refresh
+
+    const entry = {
+        dcNumber, fabric, provider, date, quantity, rate, amount, received, balance
+    };
+
+    allData.loading[currentMonth][currentEditIndex] = entry;
     saveAllData();
-    renderSection(section);
-    updateSectionCount(section);
-    cancelEdit(section);
-    
+    renderSection('loading');
+    updateSectionCount('loading');
+    clearForm('loading');
     alert('Entry updated successfully!');
 }
 
-// Delete entry
-function deleteEntry(section) {
-    if (currentEditIndex === -1) {
-        alert('No entry selected for deletion.');
+// Update Salary Entry
+function updateSalaryEntry() {
+    const name = document.getElementById('salary-name').value;
+    const advance = parseFloat(document.getElementById('salary-advance').value) || 0;
+    const others = parseFloat(document.getElementById('salary-others').value) || 0;
+    const total = advance + others;
+    const issued = parseFloat(document.getElementById('salary-issued').value) || 0;
+    const balance = total - issued;
+
+    if (!name) {
+        alert('Please enter employee name');
         return;
     }
-    
+
+    const entry = {
+        name, advance, others, total, grandTotal: total, issued, balance
+    };
+
+    allData.salary[currentMonth][currentEditIndex] = entry;
+    saveAllData();
+    renderSection('salary');
+    updateSectionCount('salary');
+    clearForm('salary');
+    alert('Entry updated successfully!');
+}
+
+// Edit entry from table button
+function editEntryFromTable(section, index) {
+    const entries = allData[section][currentMonth] || [];
+    if (entries[index]) {
+        populateFormForEdit(section, entries[index], index);
+        
+        // Scroll to form
+        const formSection = document.querySelector(`#${section} .form-section`);
+        if (formSection) {
+            formSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+}
+
+// Delete entry function
+function deleteEntry(section, index) {
     const confirmDelete = confirm('Are you sure you want to delete this entry? This action cannot be undone.');
-    if (!confirmDelete) {
-        return;
-    }
+    if (!confirmDelete) return;
     
-    // Remove entry from data
-    allData[section][currentMonth].splice(currentEditIndex, 1);
-    
-    // Save and refresh
+    allData[section][currentMonth].splice(index, 1);
     saveAllData();
     renderSection(section);
     updateSectionCount(section);
-    cancelEdit(section);
-    
     alert('Entry deleted successfully!');
-}
-
-// Cancel edit
-function cancelEdit(section) {
-    const formContainer = document.getElementById(`${section}-edit-form`);
-    formContainer.style.display = 'none';
-    
-    // Clear search field
-    document.getElementById(`${section}-edit-${getSearchKey(section)}`).value = '';
-    
-    // Reset current edit variables
-    currentEditSection = '';
-    currentEditIndex = -1;
 }
 
 // Initialize app
@@ -847,6 +766,10 @@ function renderLoadingTable() {
                 <td class="currency">${formatCurrency(entry.amount)}</td>
                 <td class="currency">${formatCurrency(entry.received)}</td>
                 <td class="currency">${formatCurrency(entry.balance)}</td>
+                <td>
+                    <button class="action-btn edit-btn" onclick="editEntryFromTable('loading', ${index})" title="Edit">✏️</button>
+                    <button class="action-btn" onclick="deleteEntry('loading', ${index})" title="Delete">🗑️</button>
+                </td>
             </tr>
         `;
         tbody.innerHTML += row;
@@ -936,6 +859,10 @@ function renderSalaryTable() {
                 <td class="currency">${formatCurrency(entry.grandTotal)}</td>
                 <td class="currency">${formatCurrency(entry.issued)}</td>
                 <td class="currency">${formatCurrency(entry.balance)}</td>
+                <td>
+                    <button class="action-btn edit-btn" onclick="editEntryFromTable('salary', ${index})" title="Edit">✏️</button>
+                    <button class="action-btn" onclick="deleteEntry('salary', ${index})" title="Delete">🗑️</button>
+                </td>
             </tr>
         `;
         tbody.innerHTML += row;
