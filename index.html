@@ -87,6 +87,34 @@
                 </div>
             </div>
             
+            <!-- Edit Section -->
+            <div class="edit-section">
+                <h3>✏️ Edit Entry</h3>
+                <div class="edit-form">
+                    <div class="edit-search">
+                        <input type="text" id="loading-edit-dcNumber" placeholder="Enter DC Number to edit" onkeyup="handleEditSearch('loading')">
+                        <button class="search-btn" onclick="searchAndEditEntry('loading')">🔍 Find & Edit</button>
+                    </div>
+                    <div id="loading-edit-form" class="edit-form-container" style="display: none;">
+                        <div class="form-grid">
+                            <input type="text" id="loading-edit-dc-display" placeholder="DC Number" readonly>
+                            <input type="text" id="loading-edit-fabric" placeholder="Fabric" required>
+                            <input type="text" id="loading-edit-provider" placeholder="Provider Name" required>
+                            <input type="date" id="loading-edit-date" required>
+                            <input type="number" id="loading-edit-quantity" placeholder="Quantity" step="0.01" required>
+                            <input type="number" id="loading-edit-rate" placeholder="Rate" step="0.01" required>
+                            <input type="number" id="loading-edit-amount" placeholder="Amount" readonly>
+                            <input type="number" id="loading-edit-received" placeholder="Received" step="0.01">
+                        </div>
+                        <div class="edit-actions">
+                            <button class="update-btn" onclick="updateEntry('loading')">✅ Update Entry</button>
+                            <button class="cancel-btn" onclick="cancelEdit('loading')">❌ Cancel</button>
+                            <button class="delete-btn" onclick="deleteEntry('loading')">🗑️ Delete Entry</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-section">
                 <h3>Add New Entry</h3>
                 <div class="form-grid">
@@ -145,6 +173,32 @@
                 </div>
             </div>
             
+            <!-- Edit Section -->
+            <div class="edit-section">
+                <h3>✏️ Edit Employee Entry</h3>
+                <div class="edit-form">
+                    <div class="edit-search">
+                        <input type="text" id="salary-edit-name" placeholder="Enter Employee Name to edit" onkeyup="handleEditSearch('salary')">
+                        <button class="search-btn" onclick="searchAndEditEntry('salary')">🔍 Find & Edit</button>
+                    </div>
+                    <div id="salary-edit-form" class="edit-form-container" style="display: none;">
+                        <div class="form-grid">
+                            <input type="text" id="salary-edit-name-display" placeholder="Employee Name" readonly>
+                            <input type="number" id="salary-edit-advance" placeholder="Advance" step="0.01" required>
+                            <input type="number" id="salary-edit-others" placeholder="Others" step="0.01" required>
+                            <input type="number" id="salary-edit-total" placeholder="Total" readonly>
+                            <input type="number" id="salary-edit-grand-total" placeholder="Grand Total" readonly>
+                            <input type="number" id="salary-edit-issued" placeholder="Issued" step="0.01" required>
+                        </div>
+                        <div class="edit-actions">
+                            <button class="update-btn" onclick="updateEntry('salary')">✅ Update Entry</button>
+                            <button class="cancel-btn" onclick="cancelEdit('salary')">❌ Cancel</button>
+                            <button class="delete-btn" onclick="deleteEntry('salary')">🗑️ Delete Entry</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-section">
                 <h3>Add New Salary Entry</h3>
                 <div class="form-grid">
@@ -200,6 +254,32 @@
                 </div>
             </div>
             
+            <!-- Edit Section -->
+            <div class="edit-section">
+                <h3>✏️ Edit Received Entry</h3>
+                <div class="edit-form">
+                    <div class="edit-search">
+                        <input type="text" id="received-edit-name" placeholder="Enter Provider Name to edit" onkeyup="handleEditSearch('received')">
+                        <button class="search-btn" onclick="searchAndEditEntry('received')">🔍 Find & Edit</button>
+                    </div>
+                    <div id="received-edit-form" class="edit-form-container" style="display: none;">
+                        <div class="form-grid">
+                            <input type="text" id="received-edit-name-display" placeholder="Provider Name" readonly>
+                            <input type="number" id="received-edit-old-balance" placeholder="Old Balance" step="0.01" required>
+                            <input type="number" id="received-edit-quantity" placeholder="Quantity" step="0.01" required>
+                            <input type="number" id="received-edit-rate" placeholder="Rate" step="0.01" required>
+                            <input type="number" id="received-edit-amount" placeholder="Amount" readonly>
+                            <input type="number" id="received-edit-received" placeholder="Received" step="0.01" required>
+                        </div>
+                        <div class="edit-actions">
+                            <button class="update-btn" onclick="updateEntry('received')">✅ Update Entry</button>
+                            <button class="cancel-btn" onclick="cancelEdit('received')">❌ Cancel</button>
+                            <button class="delete-btn" onclick="deleteEntry('received')">🗑️ Delete Entry</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-section">
                 <h3>Add New Received Entry</h3>
                 <div class="form-grid">
@@ -252,6 +332,40 @@
                 <div class="data-info">
                     <span id="piecework-count">0 entries</span>
                     <button class="clear-btn" onclick="clearMonthData('piecework')">🗑️ Clear Month</button>
+                </div>
+            </div>
+            
+            <!-- Edit Section -->
+            <div class="edit-section">
+                <h3>✏️ Edit Piece Work Entry</h3>
+                <div class="edit-form">
+                    <div class="edit-search">
+                        <input type="text" id="piecework-edit-name" placeholder="Enter Worker Name to edit" onkeyup="handleEditSearch('piecework')">
+                        <button class="search-btn" onclick="searchAndEditEntry('piecework')">🔍 Find & Edit</button>
+                    </div>
+                    <div id="piecework-edit-form" class="edit-form-container" style="display: none;">
+                        <div class="form-grid">
+                            <input type="text" id="piecework-edit-name-display" placeholder="Worker Name" readonly>
+                            <select id="piecework-edit-type" required>
+                                <option value="">Select Work Type</option>
+                                <option value="sleeve-ready-1.5">Sleeve Ready (₹1.5)</option>
+                                <option value="kansei-1">Kansei (₹1)</option>
+                                <option value="single-pocket-1.6">Single Pocket Attach (₹1.60)</option>
+                                <option value="double-pocket-3.2">Double Pocket Attach (₹3.20)</option>
+                                <option value="button-patti-0.7">Button Patti (₹0.70)</option>
+                                <option value="button-patti-label-0.3">Button Patti Label (₹0.30)</option>
+                                <option value="flap-ready-2.5">Flap Ready (₹2.50)</option>
+                            </select>
+                            <input type="number" id="piecework-edit-rate" placeholder="Rate" step="0.01" readonly>
+                            <input type="number" id="piecework-edit-quantity" placeholder="Quantity" required>
+                            <input type="number" id="piecework-edit-salary" placeholder="Salary" readonly>
+                        </div>
+                        <div class="edit-actions">
+                            <button class="update-btn" onclick="updateEntry('piecework')">✅ Update Entry</button>
+                            <button class="cancel-btn" onclick="cancelEdit('piecework')">❌ Cancel</button>
+                            <button class="delete-btn" onclick="deleteEntry('piecework')">🗑️ Delete Entry</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             

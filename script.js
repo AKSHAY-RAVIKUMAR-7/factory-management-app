@@ -38,6 +38,329 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// Edit functionality variables
+let currentEditSection = '';
+let currentEditIndex = -1;
+
+// Search and edit entry
+function searchAndEditEntry(section) {
+    const searchKey = getSearchKey(section);
+    const searchValue = document.getElementById(`${section}-edit-${searchKey}`).value.trim();
+    
+    if (!searchValue) {
+        alert(`Please enter a ${getSearchLabel(section)} to search for.`);
+        return;
+    }
+    
+    const entries = allData[section][currentMonth] || [];
+    const foundIndex = entries.findIndex(entry => {
+        return entry[searchKey].toLowerCase().includes(searchValue.toLowerCase());
+    });
+    
+    if (foundIndex === -1) {
+        alert(`No entry found with ${getSearchLabel(section)}: "${searchValue}"`);
+        return;
+    }
+    
+    // Show edit form and populate with found entry
+    currentEditSection = section;
+    currentEditIndex = foundIndex;
+    showEditForm(section, entries[foundIndex]);
+}
+
+// Handle real-time search suggestions
+function handleEditSearch(section) {
+    const searchKey = getSearchKey(section);
+    const searchValue = document.getElementById(`${section}-edit-${searchKey}`).value.trim();
+    
+    if (searchValue.length >= 2) {
+        const entries = allData[section][currentMonth] || [];
+        const matches = entries.filter(entry => 
+            entry[searchKey].toLowerCase().includes(searchValue.toLowerCase())
+        );
+        
+        // You could add a dropdown here showing matches if desired
+        console.log(`Found ${matches.length} matches for "${searchValue}"`);
+    }
+}
+
+// Get search key based on section
+function getSearchKey(section) {
+    switch(section) {
+        case 'loading': return 'dcNumber';
+        case 'salary': return 'name';
+        case 'received': return 'name';
+        case 'piecework': return 'name';
+        default: return 'name';
+    }
+}
+
+// Get search label based on section
+function getSearchLabel(section) {
+    switch(section) {
+        case 'loading': return 'DC Number';
+        case 'salary': return 'Employee Name';
+        case 'received': return 'Provider Name';
+        case 'piecework': return 'Worker Name';
+        default: return 'Name';
+    }
+}
+
+// Show edit form with populated data
+function showEditForm(section, entry) {
+    const formContainer = document.getElementById(`${section}-edit-form`);
+    formContainer.style.display = 'block';
+    
+    // Populate form fields based on section
+    switch(section) {
+        case 'loading':
+            document.getElementById('loading-edit-dc-display').value = entry.dcNumber;
+            document.getElementById('loading-edit-fabric').value = entry.fabric;
+            document.getElementById('loading-edit-provider').value = entry.provider;
+            document.getElementById('loading-edit-date').value = entry.date;
+            document.getElementById('loading-edit-quantity').value = entry.quantity;
+            document.getElementById('loading-edit-rate').value = entry.rate;
+            document.getElementById('loading-edit-amount').value = entry.amount;
+            document.getElementById('loading-edit-received').value = entry.received || 0;
+            break;
+            
+        case 'salary':
+            document.getElementById('salary-edit-name-display').value = entry.name;
+            document.getElementById('salary-edit-advance').value = entry.advance;
+            document.getElementById('salary-edit-others').value = entry.others;
+            document.getElementById('salary-edit-total').value = entry.total;
+            document.getElementById('salary-edit-grand-total').value = entry.grandTotal;
+            document.getElementById('salary-edit-issued').value = entry.issued || 0;
+            break;
+            
+        case 'received':
+            document.getElementById('received-edit-name-display').value = entry.name;
+            document.getElementById('received-edit-old-balance').value = entry.oldBalance;
+            document.getElementById('received-edit-quantity').value = entry.quantity;
+            document.getElementById('received-edit-rate').value = entry.rate;
+            document.getElementById('received-edit-amount').value = entry.amount;
+            document.getElementById('received-edit-received').value = entry.received || 0;
+            break;
+            
+        case 'piecework':
+            document.getElementById('piecework-edit-name-display').value = entry.name;
+            document.getElementById('piecework-edit-type').value = entry.workType;
+            document.getElementById('piecework-edit-rate').value = entry.rate;
+            document.getElementById('piecework-edit-quantity').value = entry.quantity;
+            document.getElementById('piecework-edit-salary').value = entry.salary;
+            break;
+    }
+    
+    // Setup event listeners for auto-calculation
+    setupEditCalculations(section);
+}
+
+// Setup auto-calculations for edit forms
+function setupEditCalculations(section) {
+    switch(section) {
+        case 'loading':
+            const qtyInput = document.getElementById('loading-edit-quantity');
+            const rateInput = document.getElementById('loading-edit-rate');
+            const amountInput = document.getElementById('loading-edit-amount');
+            
+            function updateLoadingAmount() {
+                const qty = parseFloat(qtyInput.value) || 0;
+                const rate = parseFloat(rateInput.value) || 0;
+                amountInput.value = (qty * rate).toFixed(2);
+            }
+            
+            qtyInput.addEventListener('input', updateLoadingAmount);
+            rateInput.addEventListener('input', updateLoadingAmount);
+            break;
+            
+        case 'salary':
+            const advanceInput = document.getElementById('salary-edit-advance');
+            const othersInput = document.getElementById('salary-edit-others');
+            const totalInput = document.getElementById('salary-edit-total');
+            const grandTotalInput = document.getElementById('salary-edit-grand-total');
+            
+            function updateSalaryTotals() {
+                const advance = parseFloat(advanceInput.value) || 0;
+                const others = parseFloat(othersInput.value) || 0;
+                const total = advance + others;
+                totalInput.value = total.toFixed(2);
+                grandTotalInput.value = total.toFixed(2);
+            }
+            
+            advanceInput.addEventListener('input', updateSalaryTotals);
+            othersInput.addEventListener('input', updateSalaryTotals);
+            break;
+            
+        case 'received':
+            const recQtyInput = document.getElementById('received-edit-quantity');
+            const recRateInput = document.getElementById('received-edit-rate');
+            const recAmountInput = document.getElementById('received-edit-amount');
+            
+            function updateReceivedAmount() {
+                const qty = parseFloat(recQtyInput.value) || 0;
+                const rate = parseFloat(recRateInput.value) || 0;
+                recAmountInput.value = (qty * rate).toFixed(2);
+            }
+            
+            recQtyInput.addEventListener('input', updateReceivedAmount);
+            recRateInput.addEventListener('input', updateReceivedAmount);
+            break;
+            
+        case 'piecework':
+            const typeSelect = document.getElementById('piecework-edit-type');
+            const pwRateInput = document.getElementById('piecework-edit-rate');
+            const pwQtyInput = document.getElementById('piecework-edit-quantity');
+            const pwSalaryInput = document.getElementById('piecework-edit-salary');
+            
+            function updatePieceWorkRate() {
+                const workType = typeSelect.value;
+                if (workType) {
+                    const rate = parseFloat(workType.split('-').pop());
+                    pwRateInput.value = rate.toFixed(2);
+                    updatePieceWorkSalary();
+                }
+            }
+            
+            function updatePieceWorkSalary() {
+                const rate = parseFloat(pwRateInput.value) || 0;
+                const qty = parseFloat(pwQtyInput.value) || 0;
+                pwSalaryInput.value = (rate * qty).toFixed(2);
+            }
+            
+            typeSelect.addEventListener('change', updatePieceWorkRate);
+            pwQtyInput.addEventListener('input', updatePieceWorkSalary);
+            break;
+    }
+}
+
+// Update entry
+function updateEntry(section) {
+    if (currentEditIndex === -1) {
+        alert('No entry selected for editing.');
+        return;
+    }
+    
+    // Get updated data based on section
+    let updatedEntry;
+    switch(section) {
+        case 'loading':
+            updatedEntry = {
+                dcNumber: document.getElementById('loading-edit-dc-display').value,
+                fabric: document.getElementById('loading-edit-fabric').value,
+                provider: document.getElementById('loading-edit-provider').value,
+                date: document.getElementById('loading-edit-date').value,
+                quantity: parseFloat(document.getElementById('loading-edit-quantity').value),
+                rate: parseFloat(document.getElementById('loading-edit-rate').value),
+                amount: parseFloat(document.getElementById('loading-edit-amount').value),
+                received: parseFloat(document.getElementById('loading-edit-received').value) || 0
+            };
+            updatedEntry.balance = updatedEntry.amount - updatedEntry.received;
+            break;
+            
+        case 'salary':
+            const advance = parseFloat(document.getElementById('salary-edit-advance').value) || 0;
+            const others = parseFloat(document.getElementById('salary-edit-others').value) || 0;
+            const total = advance + others;
+            const issued = parseFloat(document.getElementById('salary-edit-issued').value) || 0;
+            
+            updatedEntry = {
+                name: document.getElementById('salary-edit-name-display').value,
+                advance: advance,
+                others: others,
+                total: total,
+                grandTotal: total,
+                issued: issued,
+                balance: total - issued
+            };
+            break;
+            
+        case 'received':
+            const oldBalance = parseFloat(document.getElementById('received-edit-old-balance').value) || 0;
+            const quantity = parseFloat(document.getElementById('received-edit-quantity').value) || 0;
+            const rate = parseFloat(document.getElementById('received-edit-rate').value) || 0;
+            const amount = quantity * rate;
+            const received = parseFloat(document.getElementById('received-edit-received').value) || 0;
+            
+            updatedEntry = {
+                name: document.getElementById('received-edit-name-display').value,
+                oldBalance: oldBalance,
+                quantity: quantity,
+                rate: rate,
+                amount: amount,
+                received: received,
+                balance: (oldBalance + amount) - received
+            };
+            break;
+            
+        case 'piecework':
+            const workType = document.getElementById('piecework-edit-type').value;
+            const workTypeLabel = document.getElementById('piecework-edit-type').selectedOptions[0].text;
+            const pwRate = parseFloat(document.getElementById('piecework-edit-rate').value) || 0;
+            const pwQuantity = parseFloat(document.getElementById('piecework-edit-quantity').value) || 0;
+            
+            updatedEntry = {
+                name: document.getElementById('piecework-edit-name-display').value,
+                workType: workType,
+                workTypeLabel: workTypeLabel,
+                rate: pwRate,
+                quantity: pwQuantity,
+                salary: pwRate * pwQuantity
+            };
+            break;
+    }
+    
+    // Update the entry in data
+    if (!allData[section][currentMonth]) {
+        allData[section][currentMonth] = [];
+    }
+    allData[section][currentMonth][currentEditIndex] = updatedEntry;
+    
+    // Save and refresh
+    saveAllData();
+    renderSection(section);
+    updateSectionCount(section);
+    cancelEdit(section);
+    
+    alert('Entry updated successfully!');
+}
+
+// Delete entry
+function deleteEntry(section) {
+    if (currentEditIndex === -1) {
+        alert('No entry selected for deletion.');
+        return;
+    }
+    
+    const confirmDelete = confirm('Are you sure you want to delete this entry? This action cannot be undone.');
+    if (!confirmDelete) {
+        return;
+    }
+    
+    // Remove entry from data
+    allData[section][currentMonth].splice(currentEditIndex, 1);
+    
+    // Save and refresh
+    saveAllData();
+    renderSection(section);
+    updateSectionCount(section);
+    cancelEdit(section);
+    
+    alert('Entry deleted successfully!');
+}
+
+// Cancel edit
+function cancelEdit(section) {
+    const formContainer = document.getElementById(`${section}-edit-form`);
+    formContainer.style.display = 'none';
+    
+    // Clear search field
+    document.getElementById(`${section}-edit-${getSearchKey(section)}`).value = '';
+    
+    // Reset current edit variables
+    currentEditSection = '';
+    currentEditIndex = -1;
+}
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
