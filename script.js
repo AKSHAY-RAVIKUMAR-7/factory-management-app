@@ -12,8 +12,17 @@ function toggleMonthMenu() {
     const menu = document.getElementById('month-menu');
     const menuBtn = document.querySelector('.menu-btn');
     
-    menu.classList.toggle('open');
-    menuBtn.classList.toggle('active');
+    console.log('toggleMonthMenu called');
+    console.log('Menu element:', menu);
+    console.log('Menu button:', menuBtn);
+    
+    if (menu && menuBtn) {
+        menu.classList.toggle('open');
+        menuBtn.classList.toggle('active');
+        console.log('Menu is now:', menu.classList.contains('open') ? 'open' : 'closed');
+    } else {
+        console.error('Menu or button element not found');
+    }
 }
 
 // Close menu when clicking outside
@@ -36,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
+    console.log('Initializing app...');
+    
     // Set current month to today
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -43,14 +54,31 @@ function initializeApp() {
     currentMonth = `${currentYear}-${currentMonthNum}`;
     
     // Set the dropdown and year input
-    document.getElementById('month-dropdown').value = currentMonthNum;
-    document.getElementById('year-input').value = currentYear;
+    const monthDropdown = document.getElementById('month-dropdown');
+    const yearInput = document.getElementById('year-input');
+    
+    if (monthDropdown) {
+        monthDropdown.value = currentMonthNum;
+        console.log('Month dropdown set to:', currentMonthNum);
+    } else {
+        console.error('Month dropdown not found');
+    }
+    
+    if (yearInput) {
+        yearInput.value = currentYear;
+        console.log('Year input set to:', currentYear);
+    } else {
+        console.error('Year input not found');
+    }
     
     // Load data from localStorage
     loadAllData();
     
     // Set today's date as default in loading section
-    document.getElementById('loading-date').value = today.toISOString().split('T')[0];
+    const loadingDate = document.getElementById('loading-date');
+    if (loadingDate) {
+        loadingDate.value = today.toISOString().split('T')[0];
+    }
     
     // Render all sections for current month
     renderAllSections();
@@ -58,6 +86,8 @@ function initializeApp() {
     
     // Show current month in header
     updateMonthDisplay();
+    
+    console.log('App initialization complete');
 }
 
 function updateMonthFromDropdown() {
