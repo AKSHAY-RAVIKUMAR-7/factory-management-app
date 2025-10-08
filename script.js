@@ -43,6 +43,33 @@ let currentEditIndex = -1;
 let currentEditSection = '';
 
 // Auto-fill form functionality based on DC number or name
+function searchForEdit(section) {
+    const searchKey = getSearchField(section);
+    const searchInput = document.getElementById(`${section}-search-${searchKey}`);
+    const searchValue = searchInput.value.trim().toLowerCase();
+    
+    if (searchValue.length < 2) {
+        // If input is too short, ensure we're in add mode
+        setFormToAddMode(section);
+        return;
+    }
+    
+    const entries = allData[section][currentMonth] || [];
+    const fieldToSearch = searchKey === 'dcNumber' ? 'dcNumber' : 'name';
+    
+    const foundIndex = entries.findIndex(entry => {
+        const fieldValue = entry[fieldToSearch] || '';
+        return fieldValue.toLowerCase().includes(searchValue);
+    });
+    
+    if (foundIndex !== -1) {
+        populateFormForEdit(section, entries[foundIndex], foundIndex);
+    } else {
+        setFormToAddMode(section);
+    }
+}
+
+// Auto-fill form functionality based on DC number or name in main form
 function autoFillForm(section) {
     const searchKey = getSearchField(section);
     const inputField = document.getElementById(section === 'loading' ? 'loading-dc' : `${section}-name`);
@@ -159,6 +186,11 @@ function clearForm(section) {
     const submitBtn = document.getElementById(`${section}-submit-btn`);
     submitBtn.textContent = 'Add Entry';
     submitBtn.style.background = '#667eea';
+    
+    // Clear search field
+    const searchKey = getSearchField(section);
+    const searchInput = document.getElementById(`${section}-search-${searchKey}`);
+    if (searchInput) searchInput.value = '';
     
     // Clear form fields
     switch(section) {
