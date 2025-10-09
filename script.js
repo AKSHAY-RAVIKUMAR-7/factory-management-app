@@ -320,6 +320,33 @@ function editEntryFromTable(section, index) {
     }
 }
 
+// Render section function - refreshes the appropriate table and totals
+function renderSection(section) {
+    switch(section) {
+        case 'loading':
+            renderLoadingTable();
+            updateLoadingTotals();
+            break;
+        case 'salary':
+            renderSalaryTable();
+            updateSalaryTotals();
+            break;
+        case 'received':
+            renderReceivedTable();
+            updateReceivedTotals();
+            break;
+        case 'piecework':
+            renderPieceworkTable();
+            updatePieceworkTotals();
+            // Also refresh salary table since it shows piecework data
+            renderSalaryTable();
+            updateSalaryTotals();
+            break;
+        default:
+            console.warn('Unknown section:', section);
+    }
+}
+
 // Delete entry function
 function deleteEntry(section, index) {
     const confirmDelete = confirm('Are you sure you want to delete this entry? This action cannot be undone.');
@@ -651,6 +678,12 @@ function updateAllCounts() {
     });
 }
 
+function updateSectionCount(section) {
+    const count = getCurrentMonthData(section).length;
+    const monthName = getMonthName(currentMonth);
+    document.getElementById(`${section}-count`).textContent = `${count} entries in ${monthName}`;
+}
+
 function getAllMonthsWithData() {
     const months = new Set();
     ['loading', 'salary', 'received', 'piecework'].forEach(section => {
@@ -802,9 +835,8 @@ function addLoadingEntry() {
     
     monthData.push(entry);
     saveAllData();
-    renderLoadingTable();
-    updateLoadingTotals();
-    updateAllCounts();
+    renderSection('loading');
+    updateSectionCount('loading');
     clearLoadingForm();
     
     console.log(`Loading entry added for ${currentMonth}:`, entry);
@@ -922,9 +954,8 @@ function addSalaryEntry() {
     
     monthData.push(entry);
     saveAllData();
-    renderSalaryTable();
-    updateSalaryTotals();
-    updateAllCounts();
+    renderSection('salary');
+    updateSectionCount('salary');
     clearSalaryForm();
     
     console.log(`Salary entry added for ${currentMonth}:`, entry);
@@ -1076,9 +1107,8 @@ function addReceivedEntry() {
     
     monthData.push(entry);
     saveAllData();
-    renderReceivedTable();
-    updateReceivedTotals();
-    updateAllCounts();
+    renderSection('received');
+    updateSectionCount('received');
     clearReceivedForm();
     
     console.log(`Received entry added for ${currentMonth}:`, entry);
@@ -1212,9 +1242,8 @@ function addPieceWorkEntry() {
     
     monthData.push(entry);
     saveAllData();
-    renderPieceworkTable();
-    updatePieceworkTotals();
-    updateAllCounts();
+    renderSection('piecework');
+    updateSectionCount('piecework');
     clearPieceworkForm();
     
     console.log(`Piecework entry added for ${currentMonth}:`, entry);
