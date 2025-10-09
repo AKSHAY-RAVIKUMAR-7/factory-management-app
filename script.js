@@ -424,13 +424,23 @@ function updateMonthDisplay() {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
+    const fullMonthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
     const [year, month] = currentMonth.split('-');
     const monthName = monthNames[parseInt(month) - 1];
+    const fullMonthName = fullMonthNames[parseInt(month) - 1];
     
     // Update the compact month display in header
     const displayElement = document.getElementById('current-month-display');
     if (displayElement) {
         displayElement.textContent = `${monthName} ${year}`;
+    }
+    
+    // Update the header title with full month name
+    const headerMonthYear = document.getElementById('header-month-year');
+    if (headerMonthYear) {
+        headerMonthYear.textContent = `${fullMonthName} ${year}`;
     }
     
     // Close the menu after selection

@@ -27,7 +27,7 @@
 <body>
     <header>
         <div class="header-top">
-            <h1>🏭 Factory Management</h1>
+            <h1>🏭 Factory Management - <span id="header-month-year">October 2025</span></h1>
             <div class="header-actions">
                 <button class="menu-btn" onclick="toggleMonthMenu()">
                     <span class="current-month-display" id="current-month-display">Oct 2025</span>
@@ -52,11 +52,11 @@
                             <option value="07">July</option>
                             <option value="08">August</option>
                             <option value="09">September</option>
-                            <option value="10">October</option>
+                            <option value="10" selected>October</option>
                             <option value="11">November</option>
                             <option value="12">December</option>
                         </select>
-                        <input type="number" id="year-input" min="2020" max="2030" placeholder="Year" onchange="updateMonthFromDropdown()">
+                        <input type="number" id="year-input" min="2020" max="2030" value="2025" onchange="updateMonthFromDropdown()">
                     </div>
                 </div>
                 
