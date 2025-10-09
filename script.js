@@ -910,24 +910,50 @@ function renderSalaryTable() {
     tbody.innerHTML = '';
     const monthData = getCurrentMonthData('salary');
     
+    // Group entries by employee name
+    const groupedData = {};
     monthData.forEach((entry, index) => {
-        const row = `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${entry.name}</td>
-                <td class="currency">${formatCurrency(entry.advance)}</td>
-                <td class="currency">${formatCurrency(entry.others)}</td>
-                <td class="currency">${formatCurrency(entry.total)}</td>
-                <td class="currency">${formatCurrency(entry.grandTotal)}</td>
-                <td class="currency">${formatCurrency(entry.issued)}</td>
-                <td class="currency">${formatCurrency(entry.balance)}</td>
-                <td>
-                    <button class="action-btn edit-btn" onclick="editEntryFromTable('salary', ${index})" title="Edit">✏️</button>
-                    <button class="action-btn" onclick="deleteEntry('salary', ${index})" title="Delete">🗑️</button>
+        if (!groupedData[entry.name]) {
+            groupedData[entry.name] = [];
+        }
+        groupedData[entry.name].push({...entry, originalIndex: index});
+    });
+    
+    let serialNumber = 1;
+    Object.keys(groupedData).sort().forEach(employeeName => {
+        const employeeEntries = groupedData[employeeName];
+        const employeeGrandTotal = employeeEntries.reduce((sum, entry) => sum + entry.grandTotal, 0);
+        
+        // Add employee name header row
+        const headerRow = `
+            <tr class="worker-header-row">
+                <td colspan="9" class="worker-name-header">
+                    <strong>👤 ${employeeName} - Grand Total: ${formatCurrency(employeeGrandTotal)}</strong>
                 </td>
             </tr>
         `;
-        tbody.innerHTML += row;
+        tbody.innerHTML += headerRow;
+        
+        // Add all salary entries for this employee
+        employeeEntries.forEach((entry) => {
+            const row = `
+                <tr class="worker-entry-row">
+                    <td>${serialNumber++}</td>
+                    <td style="padding-left: 20px;">Salary</td>
+                    <td class="currency">${formatCurrency(entry.advance)}</td>
+                    <td class="currency">${formatCurrency(entry.others)}</td>
+                    <td class="currency">${formatCurrency(entry.total)}</td>
+                    <td class="currency">${formatCurrency(entry.grandTotal)}</td>
+                    <td class="currency">${formatCurrency(entry.issued)}</td>
+                    <td class="currency">${formatCurrency(entry.balance)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editEntryFromTable('salary', ${entry.originalIndex})" title="Edit">✏️</button>
+                        <button class="action-btn" onclick="deleteEntry('salary', ${entry.originalIndex})" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
     });
 }
 
@@ -1106,18 +1132,47 @@ function renderPieceworkTable() {
     tbody.innerHTML = '';
     const monthData = getCurrentMonthData('piecework');
     
+    // Group entries by worker name
+    const groupedData = {};
     monthData.forEach((entry, index) => {
-        const row = `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${entry.name}</td>
-                <td>${entry.workType}</td>
-                <td>${formatCurrency(entry.rate)}</td>
-                <td>${entry.quantity}</td>
-                <td class="currency">${formatCurrency(entry.salary)}</td>
+        if (!groupedData[entry.name]) {
+            groupedData[entry.name] = [];
+        }
+        groupedData[entry.name].push({...entry, originalIndex: index});
+    });
+    
+    let serialNumber = 1;
+    Object.keys(groupedData).sort().forEach(workerName => {
+        const workerEntries = groupedData[workerName];
+        const workerTotal = workerEntries.reduce((sum, entry) => sum + entry.salary, 0);
+        
+        // Add worker name header row
+        const headerRow = `
+            <tr class="worker-header-row">
+                <td colspan="7" class="worker-name-header">
+                    <strong>👤 ${workerName} - Total: ${formatCurrency(workerTotal)}</strong>
+                </td>
             </tr>
         `;
-        tbody.innerHTML += row;
+        tbody.innerHTML += headerRow;
+        
+        // Add all work entries for this worker
+        workerEntries.forEach((entry) => {
+            const row = `
+                <tr class="worker-entry-row">
+                    <td>${serialNumber++}</td>
+                    <td style="padding-left: 20px;">${entry.workType}</td>
+                    <td>${formatCurrency(entry.rate)}</td>
+                    <td>${entry.quantity}</td>
+                    <td class="currency">${formatCurrency(entry.salary)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editEntryFromTable('piecework', ${entry.originalIndex})" title="Edit">✏️</button>
+                        <button class="action-btn" onclick="deleteEntry('piecework', ${entry.originalIndex})" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
     });
 }
 
